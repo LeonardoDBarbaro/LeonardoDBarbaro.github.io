@@ -91,21 +91,6 @@
   <div class="game-over">PERDISTEEEE! PONE TU NOMBRE, SELECCIONA UN EMOTICON Y APRETA ENVIAR.</div>
   <input type="text" id="nameInput" placeholder="PONER NOMBRE ACA (EL TUYO)">
   
-  <style>
-    #emojiSelection {
-      display: flex;
-      gap: 10px;
-    }
-
-    label {
-      color: white;
-    }
-
-    input[type="radio"] {
-      margin-right: 5px;
-    }
-  </style>
-
   <div id="emojiSelection">
     <label for="sunEmoji">
       <input type="radio" id="sunEmoji" name="emoji" value="Sol"> Sol
@@ -120,204 +105,193 @@
   <button id="goToOtherPage2Button">VER PUNTAJE DE PALTA</button>
   
   <script>
-    var canvas = document.getElementById('game');
-    var context = canvas.getContext('2d');
-    var scoreDisplay = document.querySelector('.score');
-    var gameOverScreen = document.querySelector('.game-over');
-    var nameInput = document.getElementById('nameInput');
-    var emojiSelection = document.getElementById('emojiSelection');
-    var restartButton = document.getElementById('restartButton');
-    var goToOtherPageButton = document.getElementById('goToOtherPageButton');
-    var goToOtherPage2Button = document.getElementById('goToOtherPage2Button');
-    var selectedEmoji = null;
-    goToOtherPageButton.style.display = 'block'; // Mostrar el botón de redirección
-    goToOtherPage2Button.style.display = 'block'; // Mostrar el botón de redirección 2
-    var grid = 16;
-    var count = 0;
-    var score = 0;
-    var gameOver = false;
+    (function() {
+      var canvas = document.getElementById('game');
+      var context = canvas.getContext('2d');
+      var scoreDisplay = document.querySelector('.score');
+      var gameOverScreen = document.querySelector('.game-over');
+      var nameInput = document.getElementById('nameInput');
+      var emojiSelection = document.getElementById('emojiSelection');
+      var restartButton = document.getElementById('restartButton');
+      var goToOtherPageButton = document.getElementById('goToOtherPageButton');
+      var goToOtherPage2Button = document.getElementById('goToOtherPage2Button');
+      var selectedEmoji = null;
+      goToOtherPageButton.style.display = 'block'; // Mostrar el botón de redirección
+      goToOtherPage2Button.style.display = 'block'; // Mostrar el botón de redirección 2
+      var grid = 16;
+      var count = 0;
+      var score = 0;
+      var gameOver = false;
 
-    var snake = {
-      x: 160,
-      y: 160,
-      dx: grid,
-      dy: 0,
-      cells: [],
-      maxCells: 4
-    };
+      var snake = {
+        x: 160,
+        y: 160,
+        dx: grid,
+        dy: 0,
+        cells: [],
+        maxCells: 4
+      };
 
-    var apple = {
-      x: 320,
-      y: 320
-    };
+      var apple = {
+        x: 320,
+        y: 320
+      };
 
-    function getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    var directionLock = false; // Nueva variable para bloquear cambios de dirección
-
-    document.addEventListener('keydown', function(e) {
-      if (!directionLock) {
-        if (e.which === 37 && snake.dx === 0) { // Izquierda
-          snake.dx = -grid;
-          snake.dy = 0;
-          directionLock = true; // Bloquear hasta que la serpiente se mueva
-        } else if (e.which === 38 && snake.dy === 0) { // Arriba
-          snake.dy = -grid;
-          snake.dx = 0;
-          directionLock = true;
-        } else if (e.which === 39 && snake.dx === 0) { // Derecha
-          snake.dx = grid;
-          snake.dy = 0;
-          directionLock = true;
-        } else if (e.which === 40 && snake.dy === 0) { // Abajo
-          snake.dy = grid;
-          snake.dx = 0;
-          directionLock = true;
-        }
-      }
-    });
-
-    function loop() {
-	
-            goToOtherPageButton.addEventListener('click', function() {
-              window.location.href = 'sol_scores.html'; // Cambia 'otra_pagina.html' al nombre del archivo HTML al que quieras redirigir
-            });
-
-            goToOtherPage2Button.addEventListener('click', function() {
-              window.location.href = 'palta_scores.html'; // Cambia 'otra_pagina_2.html' al nombre del archivo HTML al que quieras redirigir
-            });
-      if (gameOver) return;
-
-      requestAnimationFrame(loop);
-
-      if (++count < 4) {
-        return;
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
       }
 
-      count = 0;
-      context.clearRect(0, 0, canvas.width, canvas.height);
+      var directionLock = false;
 
-      snake.x += snake.dx;
-      snake.y += snake.dy;
-
-      // Desbloquear el cambio de dirección después de mover la serpiente
-      directionLock = false;
-
-      if (snake.x < 0) {
-        snake.x = canvas.width - grid;
-      } else if (snake.x >= canvas.width) {
-        snake.x = 0;
-      }
-
-      if (snake.y < 0) {
-        snake.y = canvas.height - grid;
-      } else if (snake.y >= canvas.height) {
-        snake.y = 0;
-      }
-
-      snake.cells.unshift({x: snake.x, y: snake.y});
-
-      if (snake.cells.length > snake.maxCells) {
-        snake.cells.pop();
-      }
-
-      context.fillStyle = 'red';
-      context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
-
-      context.fillStyle = 'green';
-      snake.cells.forEach(function(cell, index) {
-        context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
-
-        if (cell.x === apple.x && cell.y === apple.y) {
-          snake.maxCells++;
-          score += 10;
-          scoreDisplay.textContent = "PUNTOOOOS: " + score;
-
-          apple.x = getRandomInt(0, 25) * grid;
-          apple.y = getRandomInt(0, 25) * grid;
-        }
-
-        for (var i = index + 1; i < snake.cells.length; i++) {
-          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-            gameOver = true;
-            gameOverScreen.style.display = 'block';
-            nameInput.style.display = 'block';
-            emojiSelection.style.display = 'block';
-            restartButton.style.display = 'block';
-            goToOtherPageButton.style.display = 'block'; // Mostrar el botón de redirección
-            goToOtherPage2Button.style.display = 'block'; // Mostrar el botón de redirección 2
-
-            restartButton.addEventListener('click', function() {
-              var playerName = nameInput.value.trim();
-              if (playerName !== '' && selectedEmoji !== null) {
-                // Enviar los datos al servidor
-                sendScoreToServer(playerName, score, selectedEmoji);
-                resetGame();
-              } else {
-                alert('PONE TU NOMBRE Y TU EMOTICON.');
-              }
-            });
-
+      document.addEventListener('keydown', function(e) {
+        if (!directionLock) {
+          if (e.which === 37 && snake.dx === 0) {
+            snake.dx = -grid;
+            snake.dy = 0;
+            directionLock = true;
+          } else if (e.which === 38 && snake.dy === 0) {
+            snake.dy = -grid;
+            snake.dx = 0;
+            directionLock = true;
+          } else if (e.which === 39 && snake.dx === 0) {
+            snake.dx = grid;
+            snake.dy = 0;
+            directionLock = true;
+          } else if (e.which === 40 && snake.dy === 0) {
+            snake.dy = grid;
+            snake.dx = 0;
+            directionLock = true;
           }
         }
       });
-    }
 
-    function resetGame() {
-      snake.x = 160;
-      snake.y = 160;
-      snake.cells = [];
-      snake.maxCells = 4;
-      snake.dx = grid;
-      snake.dy = 0;
+      function loop() {
+        goToOtherPageButton.addEventListener('click', function() {
+          window.location.href = 'sol_scores.html';
+        });
 
-      apple.x = getRandomInt(0, 25) * grid;
-      apple.y = getRandomInt(0, 25) * grid;
+        goToOtherPage2Button.addEventListener('click', function() {
+          window.location.href = 'palta_scores.html';
+        });
 
-      score = 0;
-      scoreDisplay.textContent = "Score: " + score;
-      gameOver = false;
+        if (gameOver) return;
 
-      gameOverScreen.style.display = 'none';
-      nameInput.style.display = 'none';
-      emojiSelection.style.display = 'none';
-      restartButton.style.display = 'none';
-      goToOtherPageButton.style.display = 'block'; // Ocultar el botón de redirección
-      goToOtherPage2Button.style.display = 'block'; // Ocultar el botón de redirección 2
-      nameInput.value = '';
+        requestAnimationFrame(loop);
 
-      selectedEmoji = null;
+        if (++count < 4) {
+          return;
+        }
+
+        count = 0;
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        snake.x += snake.dx;
+        snake.y += snake.dy;
+
+        directionLock = false;
+
+        if (snake.x < 0) {
+          snake.x = canvas.width - grid;
+        } else if (snake.x >= canvas.width) {
+          snake.x = 0;
+        }
+
+        if (snake.y < 0) {
+          snake.y = canvas.height - grid;
+        } else if (snake.y >= canvas.height) {
+          snake.y = 0;
+        }
+
+        snake.cells.unshift({x: snake.x, y: snake.y});
+
+        if (snake.cells.length > snake.maxCells) {
+          snake.cells.pop();
+        }
+
+        context.fillStyle = 'red';
+        context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+        context.fillStyle = 'green';
+        snake.cells.forEach(function(cell, index) {
+          context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+          if (cell.x === apple.x && cell.y === apple.y) {
+            snake.maxCells++;
+            score += 10;
+            scoreDisplay.textContent = "PUNTOOOOS: " + score;
+
+            apple.x = getRandomInt(0, 25) * grid;
+            apple.y = getRandomInt(0, 25) * grid;
+          }
+
+          for (var i = index + 1; i < snake.cells.length; i++) {
+            if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+              gameOver = true;
+              gameOverScreen.style.display = 'block';
+              nameInput.style.display = 'block';
+              emojiSelection.style.display = 'block';
+              restartButton.style.display = 'block';
+
+              restartButton.addEventListener('click', function() {
+                var playerName = nameInput.value.trim();
+                if (playerName !== '' && selectedEmoji !== null) {
+                  sendScoreToServer(playerName, score, selectedEmoji);
+                  resetGame();
+                } else {
+                  alert('PONE TU NOMBRE Y TU EMOTICON.');
+                }
+              });
+            }
+          }
+        });
+      }
+
+      function resetGame() {
+        snake.x = 160;
+        snake.y = 160;
+        snake.cells = [];
+        snake.maxCells = 4;
+        snake.dx = grid;
+        snake.dy = 0;
+
+        apple.x = getRandomInt(0, 25) * grid;
+        apple.y = getRandomInt(0, 25) * grid;
+
+        score = 0;
+        scoreDisplay.textContent = "Score: " + score;
+        gameOver = false;
+
+        gameOverScreen.style.display = 'none';
+        nameInput.style.display = 'none';
+        emojiSelection.style.display = 'none';
+        restartButton.style.display = 'none';
+        goToOtherPageButton.style.display = 'block';
+        goToOtherPage2Button.style.display = 'block';
+        nameInput.value = '';
+
+        selectedEmoji = null;
+
+        requestAnimationFrame(loop);
+      }
+
+      document.querySelectorAll('input[name="emoji"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+          selectedEmoji = this.value;
+        });
+      });
+
+      function sendScoreToServer(name, score, emoji) {
+        fetch('https://6b6b-209-13-156-111.ngrok-free.app', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name: name, score: score, emoji: emoji })
+        })
+      }
 
       requestAnimationFrame(loop);
-    }
-
-    // Selección de emojis
-    document.getElementById('sunEmoji').addEventListener('click', function() {
-      selectedEmoji = 'sol';
-    });
-
-    document.getElementById('avocadoEmoji').addEventListener('click', function() {
-      selectedEmoji = 'palta';
-    });
-
-    // Enviar puntaje al servidor
-    function sendScoreToServer(playerName, score, emoji) {
-      fetch('https://6b6b-209-13-156-111.ngrok-free.app', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: playerName,
-          score: score,
-          emoji: emoji
-        })
-      })
-    }
-
-    requestAnimationFrame(loop);
+    })();
   </script>
 </body>
 </html>
