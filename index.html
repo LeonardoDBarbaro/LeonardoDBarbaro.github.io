@@ -15,7 +15,7 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      position: relative; /* Asegura que los botones se posicionen en relaci髇 con el contenedor */
+      position: relative; /* Asegura que los botones se posicionen en relaci贸n con el contenedor */
     }
 
     canvas {
@@ -49,7 +49,7 @@
       cursor: pointer;
       position: absolute; /* Posiciona los botones absolutamente */
       top: 50%; /* Centra verticalmente en el contenedor */
-      transform: translateY(-50%); /* Ajusta el bot髇 para centrarlo verticalmente */
+      transform: translateY(-50%); /* Ajusta el bot贸n para centrarlo verticalmente */
     }
 
     button:hover {
@@ -130,8 +130,8 @@
     var goToOtherPageButton = document.getElementById('goToOtherPageButton');
     var goToOtherPage2Button = document.getElementById('goToOtherPage2Button');
     var selectedEmoji = null;
-    goToOtherPageButton.style.display = 'block'; // Mostrar el bot髇 de redirecci髇
-    goToOtherPage2Button.style.display = 'block'; // Mostrar el bot髇 de redirecci髇 2
+    goToOtherPageButton.style.display = 'block'; // Mostrar el bot贸n de redirecci贸n
+    goToOtherPage2Button.style.display = 'block'; // Mostrar el bot贸n de redirecci贸n 2
     var grid = 16;
     var count = 0;
     var score = 0;
@@ -155,7 +155,7 @@
       return Math.floor(Math.random() * (max - min)) + min;
     }
 
-    var directionLock = false; // Nueva variable para bloquear cambios de direcci髇
+    var directionLock = false; // Nueva variable para bloquear cambios de direcci贸n
 
     document.addEventListener('keydown', function(e) {
       if (!directionLock) {
@@ -202,7 +202,7 @@
       snake.x += snake.dx;
       snake.y += snake.dy;
 
-      // Desbloquear el cambio de direcci髇 despu閟 de mover la serpiente
+      // Desbloquear el cambio de direcci贸n despu茅s de mover la serpiente
       directionLock = false;
 
       if (snake.x < 0) {
@@ -246,8 +246,8 @@
             nameInput.style.display = 'block';
             emojiSelection.style.display = 'block';
             restartButton.style.display = 'block';
-            goToOtherPageButton.style.display = 'block'; // Mostrar el bot髇 de redirecci髇
-            goToOtherPage2Button.style.display = 'block'; // Mostrar el bot髇 de redirecci髇 2
+            goToOtherPageButton.style.display = 'block'; // Mostrar el bot贸n de redirecci贸n
+            goToOtherPage2Button.style.display = 'block'; // Mostrar el bot贸n de redirecci贸n 2
 
             restartButton.addEventListener('click', function() {
               var playerName = nameInput.value.trim();
@@ -284,8 +284,8 @@
       nameInput.style.display = 'none';
       emojiSelection.style.display = 'none';
       restartButton.style.display = 'none';
-      goToOtherPageButton.style.display = 'block'; // Ocultar el bot髇 de redirecci髇
-      goToOtherPage2Button.style.display = 'block'; // Ocultar el bot髇 de redirecci髇 2
+      goToOtherPageButton.style.display = 'block'; // Ocultar el bot贸n de redirecci贸n
+      goToOtherPage2Button.style.display = 'block'; // Ocultar el bot贸n de redirecci贸n 2
       nameInput.value = '';
 
       selectedEmoji = null;
@@ -293,7 +293,7 @@
       requestAnimationFrame(loop);
     }
 
-    // Selecci髇 de emojis
+    // Selecci贸n de emojis
     document.getElementById('sunEmoji').addEventListener('click', function() {
       selectedEmoji = 'sol';
     });
@@ -304,7 +304,7 @@
 
     // Enviar puntaje al servidor
     function sendScoreToServer(playerName, score, emoji) {
-      fetch('https://7157-209-13-156-111.ngrok-free.app', {
+      fetch('https://97d7-209-13-156-111.ngrok-free.app', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
