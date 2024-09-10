@@ -227,6 +227,7 @@
           for (var i = index + 1; i < snake.cells.length; i++) {
             if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
               gameOver = true;
+			  score = score+1
               gameOverScreen.style.display = 'block';
               nameInput.style.display = 'block';
               emojiSelection.style.display = 'block';
@@ -281,7 +282,7 @@
       });
 
       function sendScoreToServer(name, score, emoji) {
-        fetch('https://6b6b-209-13-156-111.ngrok-free.app', {
+        fetch('https://4cdc-209-13-156-111.ngrok-free.app', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
